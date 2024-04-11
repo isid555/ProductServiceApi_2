@@ -28,7 +28,7 @@ return responseEntity;
     @ExceptionHandler(PageNotFound.class)
    public ResponseEntity<ExceptionDto> handlePageNotFoundException(PageNotFound pageNotFound){
        ExceptionDto exceptionDto = new ExceptionDto();
-       exceptionDto.setMessage("invalid id passed");
+       exceptionDto.setMessage("invalid id "+pageNotFound.getId()+ " passed");
        exceptionDto.setResolution("Please check the URL");
        ResponseEntity<ExceptionDto> responseEntity = new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
        return responseEntity;

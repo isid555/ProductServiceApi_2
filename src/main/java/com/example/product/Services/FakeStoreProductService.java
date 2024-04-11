@@ -4,6 +4,7 @@ package com.example.product.Services;
 //import org.scaler.product.Model.Category;
 //import org.scaler.product.Model.Product;
 import com.example.product.Dto.FakeStoreProductDto;
+import com.example.product.Exception2.PageNotFound;
 import com.example.product.Model.Category;
 import com.example.product.Model.Product;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class FakeStoreProductService  implements ProductService {
 
     private Product ConvertToProduct(FakeStoreProductDto fakeStoreProductDto) {
         if (fakeStoreProductDto == null) {
-            return null;
+            throw new PageNotFound(fakeStoreProductDto.getId(), "Product not found");
 
         }
         Product product = new Product();
@@ -33,6 +34,9 @@ public class FakeStoreProductService  implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
+
+//        int x = 1/0;
+
         FakeStoreProductDto[] fakeStoreProductDtos = restTemplate.getForObject("https://fakestoreapi.com/products"
                 , FakeStoreProductDto[].class);
 
@@ -48,9 +52,16 @@ public class FakeStoreProductService  implements ProductService {
     }
 
     @Override
-    public Product getSingleProduct(long id) {
-        String url = "https://fakestoreapi.com/products" + id;
+
+    public Product getSingleProduct( Long id) {
+        String url = "https://fakestoreapi.com/products/" + id;
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject(url, FakeStoreProductDto.class);
+
+        if (fakeStoreProductDto == null) {
+            throw new PageNotFound(id, "Product not found");
+
+        }
+
         return ConvertToProduct(fakeStoreProductDto);
 //        return null;
     }
